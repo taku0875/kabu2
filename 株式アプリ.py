@@ -24,8 +24,8 @@ openai.api_key = OPENAI_API_KEY
 # ========================
 # ✅ Streamlit基本設定
 # ========================
-st.set_page_config(page_title="株式トレード管理＋GPT壁打ち", layout="centered")
-st.title("📈 株式トレード記録アプリ + 🤖 GPTアシスタント")
+st.set_page_config(page_title="株式トレード管理", layout="centered")
+st.title("📈 株式トレード記録アプリ(ChatGPTアシスタント付)")
 
 # ========================
 # 📝 トレード入力フォーム
@@ -71,7 +71,7 @@ with st.form("trade_form"):
 # ========================
 # 📊 トレード履歴の表示
 # ========================
-with st.expander("📊 トレード履歴を表示"):
+with st.expander("トレード履歴を表示"):
     try:
         response = supabase.table("trades").select("*").execute()
         df = pd.DataFrame(response.data)
@@ -92,12 +92,12 @@ with st.expander("📊 トレード履歴を表示"):
         st.error(f"❌ データ取得に失敗しました: {e}")
 
 # ========================
-# 🤖 GPTアシスタント機能
+# ChatGPTアシスタント機能
 # ========================
-st.subheader("🤖 GPTに相談")
+st.subheader("ChatGPTに相談")
 user_input = st.text_area("今のトレードについて相談してみましょう", height=150)
-if st.button("💬 GPTに聞く", use_container_width=True) and user_input:
-    with st.spinner("GPTが考えています..."):
+if st.button("GPTに相談", use_container_width=True) and user_input:
+    with st.spinner("ChatGPTが考えています..."):
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-4",
@@ -107,6 +107,6 @@ if st.button("💬 GPTに聞く", use_container_width=True) and user_input:
                 ]
             )
             answer = response['choices'][0]['message']['content']
-            st.markdown(f"**🧠 GPTの回答：**\n\n{answer}")
+            st.markdown(f"**　ChatGPTの回答：**\n\n{answer}")
         except Exception as e:
             st.error(f"❌ GPTからの応答に失敗しました: {e}")
